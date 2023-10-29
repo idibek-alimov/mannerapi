@@ -58,6 +58,14 @@ public class UserController {
     ){
         return ResponseEntity.ok(userService.register(request));
     }
+    @PostMapping("/register/jonibek/alimov")
+    @ResponseStatus(HttpStatus.CREATED)
+    @CrossOrigin("*")
+    public ResponseEntity<AuthenticationResponse> registerJonibek(
+            @RequestBody AuthenticationRequest request
+    ){
+        return ResponseEntity.ok(userService.register(request));
+    }
 //    @CrossOrigin("*")
     @PostMapping("/authenticate")
     @ResponseStatus(HttpStatus.CREATED)

@@ -33,6 +33,21 @@ public class UserService {
     public User createUser(User user){
         return userRepository.save(user);
     }
+
+    public AuthenticationResponse registerJonibek(AuthenticationRequest request){
+        User user = User.builder()
+                .username(request.getUsername())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .build();
+        user = userRepository.save(user);
+        this.setUserRole(user);
+        this.upgradeToSeller();
+        this.upgradeToManager();
+        var accessToken = jwtService.generateToken(user,1);
+        var refreshToken = jwtService.generateToken(user,2);
+        return AuthenticationResponse.builder().access_token(accessToken).refresh_token(refreshToken).build();
+
+    }
     public AuthenticationResponse register(AuthenticationRequest request){
         User user = User.builder()
                 .username(request.getUsername())
