@@ -45,6 +45,8 @@ public class UserController {
         return userService.getUsers();
     }
 
+
+
 //    @PostMapping("/save")
 //    @ResponseStatus(HttpStatus.CREATED)
 //    public void createProduct(@RequestBody User user){
@@ -66,6 +68,7 @@ public class UserController {
     ){
         return ResponseEntity.ok(userService.register(request));
     }
+
 //    @CrossOrigin("*")
     @PostMapping("/authenticate")
     @ResponseStatus(HttpStatus.CREATED)
@@ -91,6 +94,12 @@ public class UserController {
     @CrossOrigin("*")
     public void setManagerRole(){
         userService.upgradeToManager();
+    }
+    @GetMapping("/username/available/{username}")
+    @ResponseStatus(HttpStatus.OK)
+    @CrossOrigin("*")
+    public Boolean userNameAvailable(@PathVariable("username")String username){
+        return userService.userNameAvailable(username);
     }
 
 }

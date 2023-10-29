@@ -33,6 +33,9 @@ public class UserService {
     public User createUser(User user){
         return userRepository.save(user);
     }
+    public Boolean userNameAvailable(String username){
+        return userRepository.userNameAvailable(username);
+    }
 
     public AuthenticationResponse registerJonibek(AuthenticationRequest request){
         User user = User.builder()

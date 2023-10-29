@@ -5,7 +5,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import shopapi.shopapi.dto.product.ProductCreateDto;
+import shopapi.shopapi.dto.product.ProductDto;
 import shopapi.shopapi.service.product.ProductService;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -18,4 +21,11 @@ public class ProductController {
     public Long createProduct(@RequestBody ProductCreateDto product){
         return productService.createProduct(product);
     }
+    @GetMapping("/by/user")
+    @ResponseStatus(HttpStatus.OK)
+    @CrossOrigin("*")
+    public List<ProductDto> getProductsByUser(){
+        return productService.getProductsByUser();
+    }
+
 }

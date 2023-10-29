@@ -4,10 +4,15 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import shopapi.shopapi.dto.product.ProductCreateDto;
+import shopapi.shopapi.dto.product.ProductDto;
 import shopapi.shopapi.models.product.Product;
+import shopapi.shopapi.models.user.User;
 import shopapi.shopapi.repository.product.ProductRepository;
 import shopapi.shopapi.repository.user.UserRepository;
 import shopapi.shopapi.service.user.UserService;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -21,6 +26,22 @@ public class ProductService {
     }
     public Product getProductById(Long id){
         return productRepository.findById(id).get();
+    }
+
+    public List<ProductDto> getProductsByUser(){
+        User user = userService.getCurrentUser();
+        if(user == null)
+            return null;
+        return productRepository.findByUserId(user.getId()).stream().map(this::productToDto).collect(Collectors.toList());
+    }
+
+    public ProductDto productToDto(Product product){
+        return ProductDto.builder()
+                .id(product.getId())
+                .name(product.getName())
+                .description(product.getDescription())
+                .category(product.getCategory().getId())
+                .build();
     }
     public Product productCreateDtoToProduct(ProductCreateDto productCreateDto){
         return Product.builder()
