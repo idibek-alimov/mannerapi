@@ -8,6 +8,6 @@ import java.util.List;
 
 public interface ProductRepository extends JpaRepository<Product,Long> {
 
-    @Query(value = "SELECT * FROM product WHERE user_id=?1")
+    @Query(value = "SELECT * FROM product WHERE user_id=?1",nativeQuery = true)
     List<Product> findByUserId(Long id);
 }

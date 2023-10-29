@@ -99,7 +99,7 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     @CrossOrigin("*")
     public Boolean userNameAvailable(@PathVariable("username")String username){
-        return userService.userNameAvailable(username);
+        return !userService.userNameAvailable(username);
     }
 
 }
