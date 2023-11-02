@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import shopapi.shopapi.controller.user.extra.AuthenticationRequest;
 import shopapi.shopapi.controller.user.extra.AuthenticationResponse;
 import shopapi.shopapi.dto.user.UserInfoDto;
+import shopapi.shopapi.models.user.Address;
 import shopapi.shopapi.models.user.User;
 import shopapi.shopapi.service.user.UserService;
 
@@ -43,6 +44,12 @@ public class UserController {
     @CrossOrigin("*")
     public List<User> findAll(){
         return userService.getUsers();
+    }
+    @GetMapping("/address")
+    @ResponseStatus(HttpStatus.OK)
+    @CrossOrigin("*")
+    public List<Address> getAddressByUser(){
+        return userService.getAddressesByUserId();
     }
 
 

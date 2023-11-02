@@ -1,15 +1,19 @@
 package shopapi.shopapi.models.user;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import shopapi.shopapi.models.product.Inventory;
+
 @Table(name="user_list")
 @Entity
 @Data
@@ -35,6 +39,14 @@ public class User implements UserDetails{
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles.stream().map(role -> { return new SimpleGrantedAuthority(role.getName());}).collect(Collectors.toList());
     }
+
+    @JsonManagedReference
+    @OneToMany(
+            mappedBy = "user",
+            cascade = CascadeType.ALL
+            //orphanRemoval = true
+    )
+    private List<Address> addresses = new ArrayList<>();
 
     @Override
     public String getPassword() {

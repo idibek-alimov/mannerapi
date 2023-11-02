@@ -12,6 +12,7 @@ import shopapi.shopapi.controller.user.extra.AuthenticationRequest;
 import shopapi.shopapi.controller.user.extra.AuthenticationResponse;
 import shopapi.shopapi.dto.user.UserInfoDto;
 import shopapi.shopapi.filter.JwtService;
+import shopapi.shopapi.models.user.Address;
 import shopapi.shopapi.models.user.User;
 import shopapi.shopapi.repository.user.UserRepository;
 
@@ -26,6 +27,14 @@ public class UserService {
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
     private final RoleService roleService;
+    private final AddressService addressService;
+
+    public List<Address> getAddressesByUserId(){
+        User user = this.getCurrentUser();
+        if(user == null)
+            return null;
+        return addressService.getByUserId(user.getId());
+    }
 
     public List<User> getUsers(){
         return userRepository.findAll();

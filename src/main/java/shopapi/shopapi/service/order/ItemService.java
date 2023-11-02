@@ -30,7 +30,7 @@ public class ItemService {
                         .quantity(item.getQuantity())
                         .inventory(inventoryService.getById(item.getInventory()))
                         .order(order)
-                        .status(Item.Status.Shipping)
+                        .status(Item.Status.Queue)
                 .build());
     }
 }

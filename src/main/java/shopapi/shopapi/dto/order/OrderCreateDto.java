@@ -1,6 +1,7 @@
 package shopapi.shopapi.dto.order;
 
 import lombok.*;
+import shopapi.shopapi.dto.address.AddressDto;
 import shopapi.shopapi.dto.inventory.InventoryCreateDto;
 import shopapi.shopapi.dto.item.ItemCreateDto;
 
@@ -13,6 +14,6 @@ import java.util.List;
 @AllArgsConstructor
 @Data
 public class OrderCreateDto {
-    String address;
+    AddressDto address;
     List<ItemCreateDto> items;
 }

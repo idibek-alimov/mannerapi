@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedDate;
+import shopapi.shopapi.models.user.Address;
 import shopapi.shopapi.models.user.User;
 
 import java.time.LocalDateTime;
@@ -25,20 +26,19 @@ import java.util.List;
 public class Order {
 
 
-    public  enum Status {Shipping,Delivered};
+    public  enum Status {Queue,Shipping,Delivered};
 
     @Id
     @GeneratedValue(generator = "orders_id_generator", strategy = GenerationType.SEQUENCE)
     @SequenceGenerator(name = "orders_id_generator", sequenceName = "Orders_id_generator",allocationSize=1)
     private Long id;
 
-    private Status status = Status.Shipping;
+    private Status status = Status.Queue;
 
     @JsonManagedReference
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
-    private String address;
 
     @JsonManagedReference
     @Column(name="items")
@@ -48,6 +48,9 @@ public class Order {
             orphanRemoval = true
     )
     private List<Item> items = new ArrayList<>();
+
+    @ManyToOne
+    private Address address;
 
     @CreationTimestamp
     @CreatedDate
