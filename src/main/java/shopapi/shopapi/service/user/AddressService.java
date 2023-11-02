@@ -9,6 +9,7 @@ import shopapi.shopapi.models.user.User;
 import shopapi.shopapi.repository.user.AddressRepository;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -16,8 +17,8 @@ import java.util.List;
 public class AddressService {
     private final AddressRepository addressRepository;
 
-    public List<Address> getByUserId(Long id){
-        return addressRepository.findByUserId(id);
+    public List<AddressDto> getByUserId(Long id){
+        return addressRepository.findByUserId(id).stream().map(this::addressToDto).collect(Collectors.toList());
     }
     public Address findByUserIdAndAddressId(Long userId,Long addressId){
         return addressRepository.findByUserIdAndAddressId(userId,addressId);
@@ -35,5 +36,13 @@ public class AddressService {
     }
     public Address createAddress(Address address){
         return addressRepository.save(address);
+    }
+    private AddressDto addressToDto(Address address){
+        return AddressDto.builder()
+                        .id(address.getId())
+                .addressLine(address.getAddressLine())
+                .latitude(address.getLatitude())
+                .longitude(address.getLongitude())
+                .build();
     }
 }

@@ -10,6 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import shopapi.shopapi.controller.user.extra.AuthenticationRequest;
 import shopapi.shopapi.controller.user.extra.AuthenticationResponse;
+import shopapi.shopapi.dto.address.AddressDto;
 import shopapi.shopapi.dto.user.UserInfoDto;
 import shopapi.shopapi.filter.JwtService;
 import shopapi.shopapi.models.user.Address;
@@ -29,7 +30,7 @@ public class UserService {
     private final RoleService roleService;
     private final AddressService addressService;
 
-    public List<Address> getAddressesByUserId(){
+    public List<AddressDto> getAddressesByUserId(){
         User user = this.getCurrentUser();
         if(user == null)
             return null;
