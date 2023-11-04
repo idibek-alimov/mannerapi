@@ -6,6 +6,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import shopapi.shopapi.dto.product.ProductCreateDto;
 import shopapi.shopapi.dto.product.ProductDto;
+import shopapi.shopapi.models.order.Item;
 import shopapi.shopapi.service.product.ProductService;
 
 import java.util.List;
@@ -27,5 +28,6 @@ public class ProductController {
     public List<ProductDto> getProductsByUser(){
         return productService.getProductsByUser();
     }
+
 
 }

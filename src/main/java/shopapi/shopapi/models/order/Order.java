@@ -49,7 +49,7 @@ public class Order {
     )
     private List<Item> items = new ArrayList<>();
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Address address;
 
     @Column(columnDefinition = "TEXT")

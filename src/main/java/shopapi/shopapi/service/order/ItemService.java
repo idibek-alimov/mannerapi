@@ -24,6 +24,9 @@ public class ItemService {
             this.createItem(order,item);
         }
     }
+    public List<Item> getItemsByStatus(Integer status){
+        return itemRepository.getByStatus(status);
+    }
     public void createItem(Order order, ItemCreateDto item){
         itemRepository.save(Item.builder()
                         .customer(userService.getCurrentUser())
@@ -33,4 +36,5 @@ public class ItemService {
                         .status(Item.Status.Queue)
                 .build());
     }
+
 }
