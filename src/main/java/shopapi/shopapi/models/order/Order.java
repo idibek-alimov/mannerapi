@@ -52,6 +52,9 @@ public class Order {
     @ManyToOne
     private Address address;
 
+    @Column(columnDefinition = "TEXT")
+    private String extraInfo;
+
     @CreationTimestamp
     @CreatedDate
     private LocalDateTime created_at;

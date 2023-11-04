@@ -15,5 +15,6 @@ import java.util.List;
 @Data
 public class OrderCreateDto {
     AddressDto address;
+    String extraInfo;
     List<ItemCreateDto> items;
 }

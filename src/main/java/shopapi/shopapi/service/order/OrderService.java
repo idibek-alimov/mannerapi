@@ -28,6 +28,7 @@ public class OrderService {
         Order order = orderRepository.save(Order.builder()
                         .address(address)
                         .user(userService.getCurrentUser())
+                        .extraInfo(orderDto.getExtraInfo())
                         .status(Order.Status.Queue)
                 .build());
         itemService.createItems(order,orderDto.getItems());

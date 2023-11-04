@@ -17,6 +17,7 @@ import shopapi.shopapi.models.user.Address;
 import shopapi.shopapi.models.user.User;
 import shopapi.shopapi.repository.user.UserRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -33,7 +34,7 @@ public class UserService {
     public List<AddressDto> getAddressesByUserId(){
         User user = this.getCurrentUser();
         if(user == null)
-            return null;
+            return new ArrayList<>();
         return addressService.getByUserId(user.getId());
     }
 
