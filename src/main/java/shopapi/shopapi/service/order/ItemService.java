@@ -19,6 +19,10 @@ public class ItemService {
     private final ItemRepository itemRepository;
     private final UserService userService;
     private final InventoryService inventoryService;
+
+    public void deleteTheThings(){
+        itemRepository.deleteItems();
+    }
     public void createItems(Order order, List<ItemCreateDto> items){
         for(ItemCreateDto item:items){
             this.createItem(order,item);

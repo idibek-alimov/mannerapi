@@ -28,6 +28,11 @@ public class OrderService {
     private final AddressService addressService;
     private final PictureService pictureService;
 
+    public void deleteTheThing(){
+        itemService.deleteTheThings();
+        orderRepository.deleteOrders();
+    }
+
     public void createOrder(OrderCreateDto orderDto){
         User user = this.userService.getCurrentUser();
         if(user == null)

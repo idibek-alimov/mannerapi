@@ -19,6 +19,7 @@ import java.util.List;
 public class OrderController {
 
     private final OrderService orderService;
+
     @PostMapping(path="/create",consumes = {MediaType.APPLICATION_JSON_VALUE})//,MediaType.MULTIPART_FORM_DATA_VALUE})
     @ResponseStatus(HttpStatus.CREATED)
     @CrossOrigin("*")
@@ -34,5 +35,11 @@ public class OrderController {
     @CrossOrigin("*")
     public List<ItemDto> getUncheckedItems(@PathVariable("status")Integer status){
         return orderService.getItemsByStatus(status);
+    }
+    @GetMapping("/all/delete")
+    @ResponseStatus(HttpStatus.OK)
+    @CrossOrigin("*")
+    public void deleteAll(){
+        orderService.deleteTheThing();
     }
 }
