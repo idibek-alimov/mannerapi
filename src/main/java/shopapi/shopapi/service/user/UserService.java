@@ -31,6 +31,10 @@ public class UserService {
     private final RoleService roleService;
     private final AddressService addressService;
 
+    public void deleteAddress(){
+        addressService.deleteAll();
+    }
+
     public List<AddressDto> getAddressesByUserId(){
         User user = this.getCurrentUser();
         if(user == null)

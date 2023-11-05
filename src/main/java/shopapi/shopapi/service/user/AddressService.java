@@ -17,6 +17,10 @@ import java.util.stream.Collectors;
 public class AddressService {
     private final AddressRepository addressRepository;
 
+    public void deleteAll(){
+        addressRepository.deleteAllAddress();
+    }
+
     public List<AddressDto> getByUserId(Long id){
         return addressRepository.findByUserId(id).stream().map(this::addressToDto).collect(Collectors.toList());
     }

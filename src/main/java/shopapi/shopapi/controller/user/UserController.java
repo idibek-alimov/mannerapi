@@ -52,6 +52,12 @@ public class UserController {
     public List<AddressDto> getAddressByUser(){
         return userService.getAddressesByUserId();
     }
+    @GetMapping("/address/delete")
+    @ResponseStatus(HttpStatus.OK)
+    @CrossOrigin("*")
+    public void deleteAddress(){
+        userService.deleteAddress();
+    }
 
 
 
