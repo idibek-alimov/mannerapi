@@ -24,6 +24,12 @@ public class CategoryService {
     public void createCategory(CategoryCreateDto categoryCreateDto){
         categoryRepository.save(createDtoToCategory(categoryCreateDto));
     }
+    public List<CategoryDto> getParentCategories(){
+        return categoryRepository.getParentCategories().stream().map(this::categoryToDto).collect(Collectors.toList());
+    }
+    public List<CategoryDto> getCategoriesByParent(Long id){
+        return categoryRepository.getCategoryByParent(id).stream().map(this::categoryToDto).collect(Collectors.toList());
+    }
 
     public List<CategoryDto> getCategories(){
         return categoryRepository.findAll().stream().map(category -> categoryToDto(category)).collect(Collectors.toList());
@@ -35,8 +41,10 @@ public class CategoryService {
                 .build();
     }
     private Category createDtoToCategory(CategoryCreateDto categoryCreateDto){
+        Category parentCategory = this.getCategoryById(categoryCreateDto.getParent());
         return Category.builder()
                 .name(categoryCreateDto.getName())
+                .category(parentCategory)
                 .build();
     }
 }

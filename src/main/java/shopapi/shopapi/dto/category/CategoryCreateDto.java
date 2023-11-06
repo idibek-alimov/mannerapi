@@ -9,5 +9,6 @@ import lombok.*;
 @AllArgsConstructor
 @Data
 public class CategoryCreateDto {
+    private Long parent;
     private String name;
 }

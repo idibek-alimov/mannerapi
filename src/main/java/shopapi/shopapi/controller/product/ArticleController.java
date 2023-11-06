@@ -41,6 +41,13 @@ public class ArticleController {
     public List<ArticleColorDto> getOtherColors(@PathVariable("id") Long id){
         return articleService.getOtherColors(id);
     }
+    @GetMapping("/category/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    @CrossOrigin("*")
+    public List<ArticleDto> getByCategory(@PathVariable("id") Long id){
+        return articleService.getByCategory(id);
+    }
+
     @GetMapping("/user/liked")
     @ResponseStatus(HttpStatus.OK)
     @CrossOrigin("*")

@@ -14,4 +14,5 @@ public class ArticleOrderedDto {
     Double price;
     String pic;
     String size;
+    String address;
 }

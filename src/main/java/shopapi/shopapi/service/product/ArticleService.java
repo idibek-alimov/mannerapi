@@ -70,6 +70,9 @@ public class ArticleService {
         pictureService.createMainPic(mainPic,article);
 
     }
+    public List<ArticleDto> getByCategory(Long id){
+        return articleRepository.getByCategory(id).stream().map(this::articleToDto).collect(Collectors.toList());
+    }
     public List<ArticleColorDto> getOtherColors(Long id){
         return articleRepository.findOtherColors(id).stream().map(this::articleToArticleColorDto).collect(Collectors.toList());
     }

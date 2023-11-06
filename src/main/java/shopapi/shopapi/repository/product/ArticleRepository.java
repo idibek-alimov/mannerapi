@@ -15,6 +15,10 @@ public interface ArticleRepository extends JpaRepository<Article,Long> {
             " ?1 % ANY(STRING_TO_ARRAY(product.description,' ')))", nativeQuery = true)
     List<Article> searchArticles(String text);
 
+    @Query(value = "SELECT article.* FROM article JOIN product ON " +
+            "product.id = article.product_id WHERE product.category_id=?1",nativeQuery = true)
+    List<Article> getByCategory(Long id);
+
     @Query(value = "SELECT CASE WHEN EXISTS (SELECT * FROM liked WHERE article_id=?2 and user_id=?1) THEN 'TRUE' ELSE 'FALSE' END",nativeQuery = true)
     Boolean findLikedByUserAndArticle(Long userId, Long articleId);
     @Query(value = "SELECT * FROM article WHERE id IN (SELECT article_id FROM liked WHERE user_id=?1)",nativeQuery = true)

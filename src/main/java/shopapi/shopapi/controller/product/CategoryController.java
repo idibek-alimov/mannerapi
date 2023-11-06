@@ -27,6 +27,19 @@ public class CategoryController {
     public void createCategory(@RequestBody CategoryCreateDto category){
         categoryService.createCategory(category);
     }
+    @GetMapping("/parent")
+    @ResponseStatus(HttpStatus.OK)
+    @CrossOrigin("*")
+    public List<CategoryDto> getParentCategories(){
+        return categoryService.getParentCategories();
+    }
+
+    @GetMapping("/children/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    @CrossOrigin("*")
+    public List<CategoryDto> getCategoriesByParent(@PathVariable("id")Long id){
+        return categoryService.getCategoriesByParent(id);
+    }
 
 
 }
