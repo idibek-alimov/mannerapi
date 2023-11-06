@@ -38,6 +38,7 @@ public class CategoryService {
         return CategoryDto.builder()
                 .id(category.getId())
                 .name(category.getName())
+                .parent(category.getCategory().getId())
                 .build();
     }
     private Category createDtoToCategory(CategoryCreateDto categoryCreateDto){
