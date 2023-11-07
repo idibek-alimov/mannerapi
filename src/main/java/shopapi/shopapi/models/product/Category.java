@@ -15,6 +15,7 @@ public class Category {
     @SequenceGenerator(name = "category_id_generator", sequenceName = "Category_id_generator",allocationSize=1)
     private Long id;
     private String name;
+    private String description;
     @ManyToOne(fetch = FetchType.LAZY)
     private Category category;
 }

@@ -6,6 +6,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import shopapi.shopapi.dto.category.CategoryCreateDto;
 import shopapi.shopapi.dto.category.CategoryDto;
+import shopapi.shopapi.dto.category.CategoryUpdateDto;
 import shopapi.shopapi.service.product.CategoryService;
 
 import java.util.List;
@@ -26,6 +27,12 @@ public class CategoryController {
     @CrossOrigin("*")
     public void createCategory(@RequestBody CategoryCreateDto category){
         categoryService.createCategory(category);
+    }
+    @PostMapping(path="/master/update",consumes = {MediaType.APPLICATION_JSON_VALUE})//,consumes = {MediaType.APPLICATION_JSON_VALUE,MediaType.MULTIPART_FORM_DATA_VALUE})
+    @ResponseStatus(HttpStatus.CREATED)
+    @CrossOrigin("*")
+    public void updateCategory(@RequestBody CategoryUpdateDto category){
+        categoryService.updateCategory(category);
     }
     @GetMapping("/parent")
     @ResponseStatus(HttpStatus.OK)

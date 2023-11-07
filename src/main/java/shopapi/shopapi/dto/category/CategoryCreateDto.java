@@ -11,4 +11,5 @@ import lombok.*;
 public class CategoryCreateDto {
     private Long parent;
     private String name;
+    private String description;
 }
