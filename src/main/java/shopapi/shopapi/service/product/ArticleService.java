@@ -8,6 +8,7 @@ import shopapi.shopapi.dto.article.*;
 import shopapi.shopapi.dto.inventory.InventoryItemOrderDto;
 import shopapi.shopapi.models.order.Item;
 import shopapi.shopapi.models.product.Article;
+import shopapi.shopapi.models.product.Category;
 import shopapi.shopapi.models.product.Inventory;
 import shopapi.shopapi.models.product.Picture;
 import shopapi.shopapi.models.user.Address;
@@ -126,6 +127,7 @@ public class ArticleService {
                 .build();
     }
     private ArticleSellerDto toSellerArticleDto(Article article){
+        Category category = article.getProduct().getCategory();
         return ArticleSellerDto
                 .builder()
                 .id(article.getId())
@@ -133,7 +135,7 @@ public class ArticleService {
                 .mainPic(pictureService.getMainPic(article.getId()))
                 .name(article.getProduct().getName())
                 .price(article.getPrice())
-                .category(article.getProduct().getCategory().getName())
+                .category(category != null ? category.getName() : null)
                 .inventories(article.getInventory().stream().map(Inventory::getSize).collect(Collectors.toList()))
                 .build();
     }
