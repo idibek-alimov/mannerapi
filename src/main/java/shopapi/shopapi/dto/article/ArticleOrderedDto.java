@@ -18,4 +18,5 @@ public class ArticleOrderedDto {
     String latitude;
     String longitude;
     Integer quantity;
+    Long itemId;
 }

@@ -179,6 +179,7 @@ public class ArticleService {
                 .latitude(address.getLatitude())
                 .longitude(address.getLongitude())
                 .quantity(item.getQuantity())
+                .itemId(item.getId())
                 .build();
 
     }
