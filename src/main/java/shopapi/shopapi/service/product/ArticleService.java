@@ -133,6 +133,8 @@ public class ArticleService {
                 .mainPic(pictureService.getMainPic(article.getId()))
                 .name(article.getProduct().getName())
                 .price(article.getPrice())
+                .category(article.getProduct().getCategory().getName())
+                .inventories(article.getInventory().stream().map(Inventory::getSize).collect(Collectors.toList()))
                 .build();
     }
     private ArticleDto articleToDto(Article article){

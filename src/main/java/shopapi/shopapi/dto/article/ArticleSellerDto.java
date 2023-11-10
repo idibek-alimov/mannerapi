@@ -2,6 +2,8 @@ package shopapi.shopapi.dto.article;
 
 import lombok.*;
 
+import java.util.List;
+
 @Builder
 @Getter
 @Setter
@@ -11,6 +13,8 @@ import lombok.*;
 public class ArticleSellerDto {
     Long id;
     String mainPic;
+    String category;
+    List<String> inventories;
     Double price;
     String color;
     String name;
