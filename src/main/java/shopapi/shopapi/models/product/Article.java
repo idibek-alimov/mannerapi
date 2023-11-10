@@ -29,6 +29,8 @@ public class Article {
     @ManyToOne
     private Product product;
     private Double price;
+    private Boolean available = true;
+    private Boolean active = false;
 
     @JsonManagedReference
     @Column(name = "inventories")

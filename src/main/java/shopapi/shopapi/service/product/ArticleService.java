@@ -5,13 +5,18 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import shopapi.shopapi.dto.article.*;
+import shopapi.shopapi.dto.inventory.InventoryItemOrderDto;
+import shopapi.shopapi.models.order.Item;
 import shopapi.shopapi.models.product.Article;
 import shopapi.shopapi.models.product.Inventory;
 import shopapi.shopapi.models.product.Picture;
+import shopapi.shopapi.models.user.Address;
 import shopapi.shopapi.models.user.User;
 import shopapi.shopapi.repository.product.ArticleRepository;
+import shopapi.shopapi.service.order.ItemService;
 import shopapi.shopapi.service.user.UserService;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -26,25 +31,35 @@ public class ArticleService {
     private final InventoryService inventoryService;
     private final PictureService pictureService;
     private final UserService userService;
+    private final ItemService itemService;
 
+
+    ///////////////CREATE////////////////////////////
     public Article createArticle(ArticleCreateDto article){
         Article newArticle = articleRepository.save(createDtoToArticle(article));
         inventoryService.createInventories(article.getInventories(),newArticle);
         return newArticle;
     }
-    public List<ArticleOrderedDto> getShippingArticles(){
-        User user = userService.getCurrentUser();
-        if(user == null)
-            return null;
-        return inventoryService.getShippingInventories(user.getId()).stream().map(this::inventoryToArticleOrderDto).collect(Collectors.toList());
-    }
-    public List<ArticleOrderedDto> getDeliveredArticles(){
-        User user = userService.getCurrentUser();
-        if(user == null)
-            return null;
 
-        return inventoryService.getDeliveredInventories(user.getId()).stream().map(this::inventoryToArticleOrderDto).collect(Collectors.toList());
+    public List<ArticleOrderedDto> getManagerQueueArticles(){
+        return itemService.getItemsByStatus(0).stream().map(this::inventoryToArticleOrderDto).collect(Collectors.toList());
     }
+    public List<ArticleOrderedDto> getManagerShippingArticles(){
+        return itemService.getItemsByStatus(1).stream().map(this::inventoryToArticleOrderDto).collect(Collectors.toList());
+    }public List<ArticleOrderedDto> getManagerDeliveredArticles(){
+        return itemService.getItemsByStatus(2).stream().map(this::inventoryToArticleOrderDto).collect(Collectors.toList());
+    }
+
+    public List<ArticleOrderedDto> getShippingArticlesByUser(){
+        return itemService.getCustomerShippigItems().stream().map(this::inventoryToArticleOrderDto).collect(Collectors.toList());
+    }
+    public List<ArticleOrderedDto> getDeliveredArticlesByUser(){
+        User user = userService.getCurrentUser();
+        if(user == null)
+            return null;
+        return itemService.getItemsByStatusAndUser(1).stream().map(this::inventoryToArticleOrderDto).collect(Collectors.toList());
+    }
+
     public List<ArticleDto> findLikedArticles(){
         User user = userService.getCurrentUser();
         if(user==null)
@@ -76,10 +91,47 @@ public class ArticleService {
     public List<ArticleColorDto> getOtherColors(Long id){
         return articleRepository.findOtherColors(id).stream().map(this::articleToArticleColorDto).collect(Collectors.toList());
     }
+    public List<ArticleSellerDto> getSellersArticlesAvailable(){
+        User user = this.userService.getCurrentUser();
+        if(user == null)
+            return new ArrayList<>();
+        return articleRepository.getByUserAvailable(user.getId()).stream().map(this::toSellerArticleDto).toList();
+    }
+    public List<ArticleSellerDto> getSellersArticlesUnavailable(){
+        User user = this.userService.getCurrentUser();
+        if(user == null)
+            return new ArrayList<>();
+        return articleRepository.getByUserNotAvailable(user.getId()).stream().map(this::toSellerArticleDto).toList();
+    }
+
+    public List<ArticleSellerDto> getArticlesNonActive(){
+        return articleRepository.getArticlesNotActive().stream().map(this::toSellerArticleDto).collect(Collectors.toList());
+    }
+
+    public void setActive(Long articleId){
+        articleRepository.setActive(articleId);
+    }
+
+
+    //////////////////////////////////////////////////////
+    ////////////CONVERTERS///////////////////////////////
+    //////////////////////////////////////////////////////
     private Article createDtoToArticle(ArticleCreateDto article){
         return Article.builder()
                 .color(colorService.getColorById(article.getColor()))
                 .product(productService.getProductById(article.getProduct()))
+                .price(article.getPrice())
+                .available(true)
+                .active(false)
+                .build();
+    }
+    private ArticleSellerDto toSellerArticleDto(Article article){
+        return ArticleSellerDto
+                .builder()
+                .id(article.getId())
+                .color(article.getColor().getName())
+                .mainPic(pictureService.getMainPic(article.getId()))
+                .name(article.getProduct().getName())
                 .price(article.getPrice())
                 .build();
     }
@@ -113,7 +165,9 @@ public class ArticleService {
                 .mainPic(pictureService.getMainPic(article.getId()))
                 .build();
     }
-    private ArticleOrderedDto inventoryToArticleOrderDto(Inventory inventory){
+    private ArticleOrderedDto inventoryToArticleOrderDto(Item item){
+        Inventory inventory = item.getInventory();
+        Address address = item.getOrder().getAddress();
         Article article = inventory.getArticle();
         return ArticleOrderedDto.builder()
                 .id(article.getId())
@@ -121,6 +175,10 @@ public class ArticleService {
                 .name(article.getProduct().getName())
                 .price(article.getPrice())
                 .pic(pictureService.getMainPic(article.getId()))
+                .address(address.getAddressLine())
+                .latitude(address.getLatitude())
+                .longitude(address.getLongitude())
+                .quantity(item.getQuantity())
                 .build();
 
     }

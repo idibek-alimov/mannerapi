@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import shopapi.shopapi.dto.inventory.InventoryCreateDto;
 import shopapi.shopapi.dto.inventory.InventoryDto;
+import shopapi.shopapi.dto.inventory.InventoryItemOrderDto;
 import shopapi.shopapi.models.product.Article;
 import shopapi.shopapi.models.product.Inventory;
 import shopapi.shopapi.repository.product.InventoryRepository;
@@ -31,11 +32,21 @@ public class InventoryService {
     public List<InventoryDto> getInventoryDTOsByArticle(Long id){
         return inventoryRepository.getByArticleId(id).stream().map(this::inventoryToDto).collect(Collectors.toList());
     }
-    public List<Inventory> getShippingInventories(Long userId){
-        return inventoryRepository.findShippingInventories(userId);
+    public List<Inventory> getShippingInventoriesByUser(Long userId){
+        return inventoryRepository.findShippingInventoriesByUser(userId);
     }
-    public List<Inventory> getDeliveredInventories(Long userId){
-        return inventoryRepository.findDeliveredInventories(userId);
+    public List<InventoryItemOrderDto> getQueueInventories(){
+        System.out.println("so far fine");
+        return inventoryRepository.findQueueInventories();
+    }
+    public List<Inventory> getShippingInventories(){
+        return inventoryRepository.findShippingInventories();
+    }
+    public List<Inventory> getDeliveredInventories(){
+        return inventoryRepository.findDeliveredInventories();
+    }
+    public List<Inventory> getDeliveredInventoriesByUser(Long userId){
+        return inventoryRepository.findDeliveredInventoriesByUser(userId);
     }
     private InventoryDto inventoryToDto(Inventory inventory){
         return InventoryDto.builder()

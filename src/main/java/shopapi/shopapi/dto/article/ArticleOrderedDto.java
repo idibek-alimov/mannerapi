@@ -15,4 +15,7 @@ public class ArticleOrderedDto {
     String pic;
     String size;
     String address;
+    String latitude;
+    String longitude;
+    Integer quantity;
 }

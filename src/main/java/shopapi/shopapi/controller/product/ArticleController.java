@@ -74,14 +74,57 @@ public class ArticleController {
     @ResponseStatus(HttpStatus.OK)
     @CrossOrigin("*")
     public List<ArticleOrderedDto> getShippingArticles(){
-        return articleService.getShippingArticles();
+        return articleService.getShippingArticlesByUser();
     }
     @GetMapping("/ordered/delivered")
     @ResponseStatus(HttpStatus.OK)
     @CrossOrigin("*")
     public List<ArticleOrderedDto> getDeliveredArticles(){
-        return articleService.getDeliveredArticles();
+        return articleService.getDeliveredArticlesByUser();
     }
 
+    @GetMapping("/seller/available")
+    @ResponseStatus(HttpStatus.OK)
+    @CrossOrigin("*")
+    public List<ArticleSellerDto> getArticlesAvailable(){
+        return articleService.getSellersArticlesAvailable();
+    }
 
+    @GetMapping("/seller/unavailable")
+    @ResponseStatus(HttpStatus.OK)
+    @CrossOrigin("*")
+    public List<ArticleSellerDto> getArticlesUnavailable(){
+        return articleService.getSellersArticlesUnavailable();
+    }
+
+    @GetMapping("/manager/nonactive")
+    @ResponseStatus(HttpStatus.OK)
+    @CrossOrigin("*")
+    public List<ArticleSellerDto> getArticlesNonactive(){
+        return articleService.getArticlesNonActive();
+    }
+    @GetMapping("/manager/activate/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    @CrossOrigin("*")
+    public void getArticlesNonactive(@PathVariable("id")Long id){
+        articleService.setActive(id);
+    }
+    @GetMapping("/manager/order/queue")
+    @ResponseStatus(HttpStatus.OK)
+    @CrossOrigin("*")
+    public List<ArticleOrderedDto> getManagerQueueArticles(){
+        return articleService.getManagerQueueArticles();
+    }
+    @GetMapping("/manager/order/shipping")
+    @ResponseStatus(HttpStatus.OK)
+    @CrossOrigin("*")
+    public List<ArticleOrderedDto> getManagerShippingArticles(){
+        return articleService.getManagerShippingArticles();
+    }
+    @GetMapping("/manager/order/delivered")
+    @ResponseStatus(HttpStatus.OK)
+    @CrossOrigin("*")
+    public List<ArticleOrderedDto> getManagerDeliveredArticles(){
+        return articleService.getManagerDeliveredArticles();
+    }
 }

@@ -6,10 +6,12 @@ import org.springframework.stereotype.Service;
 import shopapi.shopapi.dto.item.ItemCreateDto;
 import shopapi.shopapi.models.order.Item;
 import shopapi.shopapi.models.order.Order;
+import shopapi.shopapi.models.user.User;
 import shopapi.shopapi.repository.order.ItemRepository;
 import shopapi.shopapi.service.product.InventoryService;
 import shopapi.shopapi.service.user.UserService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -31,6 +33,19 @@ public class ItemService {
     public List<Item> getItemsByStatus(Integer status){
         return itemRepository.getByStatus(status);
     }
+    public List<Item> getCustomerShippigItems(){
+        User user = userService.getCurrentUser();
+        if(user == null)
+            return new ArrayList<>();
+        return itemRepository.getCustomerShippingItems(user.getId());
+    }
+    public List<Item> getItemsByStatusAndUser(Integer status){
+        User user = userService.getCurrentUser();
+        if(user == null)
+            return new ArrayList<>();
+        return itemRepository.getByStatusAndUser(status,user.getId());
+    }
+
     public void createItem(Order order, ItemCreateDto item){
         itemRepository.save(Item.builder()
                         .customer(userService.getCurrentUser())
