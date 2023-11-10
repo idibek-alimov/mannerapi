@@ -42,4 +42,10 @@ public class OrderController {
     public void deleteAll(){
         orderService.deleteTheThing();
     }
+    @GetMapping("/item/change/status/{id}/{status}")
+    @ResponseStatus(HttpStatus.OK)
+    @CrossOrigin("*")
+    public void changeStatus(@PathVariable("id")Long id,@PathVariable("status")Integer status){
+        orderService.changeStatus(id,status);
+    }
 }

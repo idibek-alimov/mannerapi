@@ -32,6 +32,10 @@ public class OrderService {
         itemService.deleteTheThings();
         orderRepository.deleteOrders();
     }
+    public void changeStatus(Long itemId,Integer status){
+        itemService.changeStatus(itemId,status);
+    }
+
 
     public void createOrder(OrderCreateDto orderDto){
         User user = this.userService.getCurrentUser();

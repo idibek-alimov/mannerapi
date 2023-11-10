@@ -22,4 +22,7 @@ public interface ItemRepository extends JpaRepository<Item,Long> {
     @Query(value = "DELETE FROM item",nativeQuery = true)
     void deleteItems();
 
+    @Modifying
+    @Query(value = "UPDATE item SET status=?2 WHERE id=?1",nativeQuery = true)
+    void changeStatus(Long itemId,Integer status);
 }

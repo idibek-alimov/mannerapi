@@ -39,6 +39,9 @@ public class ItemService {
             return new ArrayList<>();
         return itemRepository.getCustomerShippingItems(user.getId());
     }
+    public void changeStatus(Long itemId,Integer status){
+        itemRepository.changeStatus(itemId,status);
+    }
     public List<Item> getItemsByStatusAndUser(Integer status){
         User user = userService.getCurrentUser();
         if(user == null)
@@ -55,5 +58,6 @@ public class ItemService {
                         .status(Item.Status.Queue)
                 .build());
     }
+
 
 }
