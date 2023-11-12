@@ -35,6 +35,13 @@ public class OrderService {
     public void changeStatus(Long itemId,Integer status){
         itemService.changeStatus(itemId,status);
     }
+    public void dropTableItems(){
+        itemService.dropTableItems();
+    }
+    public void setStatusDelivered(Long id){
+        itemService.setStatusDelivered(id);
+    }
+
 
 
     public void createOrder(OrderCreateDto orderDto){

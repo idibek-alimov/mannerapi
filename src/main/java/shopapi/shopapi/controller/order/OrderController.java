@@ -48,4 +48,10 @@ public class OrderController {
     public void changeStatus(@PathVariable("id")Long id,@PathVariable("status")Integer status){
         orderService.changeStatus(id,status);
     }
+    @GetMapping("/item/drop")
+    @ResponseStatus(HttpStatus.OK)
+    @CrossOrigin("*")
+    public void dropTableItem(){
+        orderService.dropTableItems();
+    }
 }

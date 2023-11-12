@@ -20,6 +20,7 @@ public class ProductController {
     @ResponseStatus(HttpStatus.CREATED)
     @CrossOrigin("*")
     public Long createProduct(@RequestBody ProductCreateDto product){
+        System.out.println(product.getCategory());
         return productService.createProduct(product);
     }
     @GetMapping("/by/user")

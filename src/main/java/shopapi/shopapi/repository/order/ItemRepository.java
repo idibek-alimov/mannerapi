@@ -25,4 +25,8 @@ public interface ItemRepository extends JpaRepository<Item,Long> {
     @Modifying
     @Query(value = "UPDATE item SET status=?2 WHERE id=?1",nativeQuery = true)
     void changeStatus(Long itemId,Integer status);
+
+    @Modifying
+    @Query(value = "DROP TABLE item",nativeQuery = true)
+    void dropTableItems();
 }

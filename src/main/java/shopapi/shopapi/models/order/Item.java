@@ -23,7 +23,7 @@ import java.time.LocalDateTime;
 @Builder
 public class Item {
     //@JsonView(View.OnlyId.class)
-    public  enum Status {Queue,Shipping,Delivered};
+    public enum Status {Queue,Shipping,Delivered};
     @Id
     @GeneratedValue(generator = "items_id_generator", strategy = GenerationType.SEQUENCE)
     @SequenceGenerator(name = "items_id_generator", sequenceName = "Items_id_generator",allocationSize=1)

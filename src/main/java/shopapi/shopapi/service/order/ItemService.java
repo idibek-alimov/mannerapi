@@ -39,8 +39,18 @@ public class ItemService {
             return new ArrayList<>();
         return itemRepository.getCustomerShippingItems(user.getId());
     }
+    public void dropTableItems(){
+        itemRepository.dropTableItems();
+    }
     public void changeStatus(Long itemId,Integer status){
         itemRepository.changeStatus(itemId,status);
+    }
+    public void setStatusDelivered(Long id){
+        Item item = itemRepository.findById(id).get();
+        if(item != null){
+            item.setStatus(Item.Status.Delivered);
+            itemRepository.save(item);
+        }
     }
     public List<Item> getItemsByStatusAndUser(Integer status){
         User user = userService.getCurrentUser();
