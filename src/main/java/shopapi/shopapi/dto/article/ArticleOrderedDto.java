@@ -13,6 +13,8 @@ public class ArticleOrderedDto {
     String name;
     Double price;
     String pic;
+    Double prevPrice;
+    Integer discount;
     String size;
     String address;
     String latitude;

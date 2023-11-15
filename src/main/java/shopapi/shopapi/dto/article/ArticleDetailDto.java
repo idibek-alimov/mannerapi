@@ -15,6 +15,8 @@ public class ArticleDetailDto {
     Long id;
     String name;
     Double price;
+    Double prevPrice;
+    Integer discount;
     String mainPic;
     String description;
     List<String> pics;

@@ -16,6 +16,7 @@ public class ArticleSellerDto {
     String category;
     List<String> inventories;
     Double price;
+    Integer discount;
     String color;
     String name;
 }

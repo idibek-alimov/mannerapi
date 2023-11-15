@@ -29,6 +29,7 @@ public class Article {
     @ManyToOne
     private Product product;
     private Double price;
+    private Integer discount;
     private Boolean available = true;
     private Boolean active = false;
 

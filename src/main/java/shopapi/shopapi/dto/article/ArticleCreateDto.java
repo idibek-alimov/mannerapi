@@ -16,4 +16,5 @@ public class ArticleCreateDto {
     private Long color;
     private Double price;
     private List<InventoryCreateDto> inventories;
+    private Integer discount;
 }

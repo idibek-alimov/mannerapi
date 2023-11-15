@@ -122,6 +122,7 @@ public class ArticleService {
                 .color(colorService.getColorById(article.getColor()))
                 .product(productService.getProductById(article.getProduct()))
                 .price(article.getPrice())
+                .discount(article.getDiscount())
                 .available(true)
                 .active(false)
                 .build();
@@ -135,6 +136,7 @@ public class ArticleService {
                 .mainPic(pictureService.getMainPic(article.getId()))
                 .name(article.getProduct().getName())
                 .price(article.getPrice())
+                .discount(article.getDiscount())
                 .category(category != null ? category.getName() : null)
                 .inventories(article.getInventory().stream().map(Inventory::getSize).collect(Collectors.toList()))
                 .build();
@@ -143,7 +145,9 @@ public class ArticleService {
         return ArticleDto.builder()
                 .id(article.getId())
                 .name(article.getProduct().getName())
-                .price(article.getPrice())
+                .price(article.getDiscount() != null ? getDiscountPrice(article.getPrice(),article.getDiscount()): article.getPrice())
+                .prevPrice(article.getDiscount() != null ? article.getPrice() : null)
+                .discount(article.getDiscount())
                 .pic(pictureService.getMainPic(article.getId()))
                 .build();
     }
@@ -157,7 +161,9 @@ public class ArticleService {
                 .description(article.getProduct().getDescription())
                 .mainPic(pictureService.getMainPic(article.getId()))
                 .pics(pictureService.getPics(article.getId()))
-                .price(article.getPrice())
+                .price(article.getDiscount() != null ? getDiscountPrice(article.getPrice(),article.getDiscount()): article.getPrice())
+                .discount(article.getDiscount())
+                .prevPrice(article.getDiscount() != null ? article.getPrice() : null)
                 .color(article.getColor().getName())
                 .inventories(inventoryService.getInventoryDTOsByArticle(article.getId()))
                 .like(userService.getCurrentUser() != null && articleRepository.findLikedByUserAndArticle(userService.getCurrentUser().getId(), article.getId()))
@@ -173,12 +179,15 @@ public class ArticleService {
         Inventory inventory = item.getInventory();
         Address address = item.getOrder().getAddress();
         Article article = inventory.getArticle();
+
         return ArticleOrderedDto.builder()
                 .id(article.getId())
                 .size(inventory.getSize())
+                .prevPrice(article.getDiscount() != null ? article.getPrice() : null)
                 .name(article.getProduct().getName())
-                .price(article.getPrice())
+                .price(article.getDiscount() != null ? getDiscountPrice(article.getPrice(),article.getDiscount()):article.getPrice())
                 .pic(pictureService.getMainPic(article.getId()))
+                .discount(article.getDiscount())
                 .address(address.getAddressLine())
                 .latitude(address.getLatitude())
                 .longitude(address.getLongitude())
@@ -186,6 +195,9 @@ public class ArticleService {
                 .itemId(item.getId())
                 .build();
 
+    }
+    private Double getDiscountPrice(Double price,Integer discount){
+        return Math.floor((double)(price*((100-discount)/100.0f)));
     }
 
 }

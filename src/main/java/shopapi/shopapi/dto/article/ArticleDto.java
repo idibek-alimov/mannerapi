@@ -12,5 +12,7 @@ public class ArticleDto {
     Long id;
     String name;
     Double price;
+    Double prevPrice;
+    Integer discount;
     String pic;
 }

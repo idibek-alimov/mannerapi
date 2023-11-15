@@ -1,15 +1,15 @@
 version: "3.7"
 services:
-  postgres:
-    image: postgres:13-alpine
-    environment:
-      POSTGRES_USER: jonibek
-      POSTGRES_PASSWORD: jonik1997
-      POSTGRES_DB: jonibekdb
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres-data:/var/lib/postgresql/data
+#  postgres:
+#    image: postgres:13-alpine
+#    environment:
+#      POSTGRES_USER: jonibek
+#      POSTGRES_PASSWORD: jonik1997
+#      POSTGRES_DB: jonibekdb
+#    ports:
+#      - "5432:5432"
+#    volumes:
+#      - postgres-data:/var/lib/postgresql/data
   loki:
     image: grafana/loki:main
     command: [ "-config.file=/etc/loki/local-config.yaml" ]
@@ -20,6 +20,8 @@ services:
     command:
       - --enable-feature=exemplar-storage
       - --config.file=/etc/prometheus/prometheus.yml
+    extra_hosts:
+      - host.docker.internal:host-gateway
     volumes:
       - ./docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
     ports:
@@ -44,8 +46,8 @@ services:
       - GF_AUTH_DISABLE_LOGIN_FORM=true
     ports:
       - "3000:3000"
-volumes:
-  postgres-data:
+#volumes:
+#  postgres-data:
 
 #volumes:
 #  postgres:
