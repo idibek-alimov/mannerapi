@@ -42,6 +42,12 @@ public class OrderService {
         itemService.setStatusDelivered(id);
     }
 
+    public void sendMassage(){
+        SMSCSender sd= new SMSCSender("alikcey.2001@gmail.com", "AlimovIdibek2001", "utf-8", true);
+        sd.sendSms("89777924569", "Ваш пароль: 123", 1, "", "", 0, "", "");
+        sd.getSmsCost("89777924569", "Вы успешно зарегистрированы!", 0, 0, "", "");
+        sd.getBalance();
+    }
 
 
     public void createOrder(OrderCreateDto orderDto){

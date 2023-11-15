@@ -1,5 +1,6 @@
 package shopapi.shopapi.repository.product;
 
+import io.micrometer.observation.annotation.Observed;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -8,6 +9,7 @@ import shopapi.shopapi.models.product.Like;
 import java.util.List;
 import java.util.Optional;
 
+@Observed
 public interface LikeRepository extends JpaRepository<Like,Long> {
     @Query(value = "SELECT * FROM liked WHERE user_id=?1 AND article_id=?2",nativeQuery = true)
     Optional<Like> findByUserAndArticle(Long userId, Long articleId);

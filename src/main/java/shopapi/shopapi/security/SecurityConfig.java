@@ -64,7 +64,7 @@ public class SecurityConfig {
                         .dispatcherTypeMatchers(DispatcherType.FORWARD, DispatcherType.ERROR).permitAll()
 //                        .requestMatchers("/api/v1/article/user/**").hasRole("USER")
 //                        .requestMatchers("/api/v1/user/seller/**","/api/v1/product/seller/**","/api/v1/article/seller/**","/api/v1/color/manager/**").hasRole("SELLER")
-
+                                .requestMatchers("/**").permitAll()
                         .requestMatchers("/api/**").permitAll()
                         .requestMatchers("/login").permitAll()
                         .anyRequest().authenticated()

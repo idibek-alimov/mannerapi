@@ -54,4 +54,12 @@ public class OrderController {
     public void dropTableItem(){
         orderService.dropTableItems();
     }
+
+    @GetMapping("/massage/send")
+    @ResponseStatus(HttpStatus.OK)
+    @CrossOrigin("*")
+    public void sendMassage(){
+        orderService.sendMassage();
+    }
+
 }
