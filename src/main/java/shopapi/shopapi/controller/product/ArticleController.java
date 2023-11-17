@@ -105,7 +105,7 @@ public class ArticleController {
     @GetMapping("/seller/product/{id}")
     @ResponseStatus(HttpStatus.OK)
     @CrossOrigin("*")
-    public List<ArticleSellerDto> getArticlesByProduct(@PathVariable("id")Long id){
+    public List<ArticleSellerUpdateDto> getArticlesByProduct(@PathVariable("id")Long id){
         return articleService.getArticlesByProduct(id);
     }
 

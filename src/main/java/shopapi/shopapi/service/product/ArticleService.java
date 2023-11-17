@@ -5,7 +5,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import shopapi.shopapi.dto.article.*;
+import shopapi.shopapi.dto.color.ColorDto;
 import shopapi.shopapi.dto.inventory.InventoryItemOrderDto;
+import shopapi.shopapi.dto.inventory.InventoryUpdateDto;
 import shopapi.shopapi.models.order.Item;
 import shopapi.shopapi.models.product.Article;
 import shopapi.shopapi.models.product.Category;
@@ -139,11 +141,9 @@ public class ArticleService {
     public List<ArticleSellerDto> getArticlesNonActive(){
         return articleRepository.getArticlesNotActive().stream().map(this::toSellerArticleDto).collect(Collectors.toList());
     }
-    public List<ArticleSellerDto> getArticlesByProduct(Long id){
-        return articleRepository.getArticlesByProductId(id).stream().map(this::toSellerArticleDto).collect(Collectors.toList());
+    public List<ArticleSellerUpdateDto> getArticlesByProduct(Long id){
+        return articleRepository.getArticlesByProductId(id).stream().map(this::toArticleSellerUpdateDto).collect(Collectors.toList());
     }
-
-
     public void setActive(Long articleId){
         articleRepository.setActive(articleId);
     }
@@ -235,5 +235,14 @@ public class ArticleService {
     private Double getDiscountPrice(Double price,Integer discount){
         return Math.floor((double)(price*((100-discount)/100.0f)));
     }
-
+    private ArticleSellerUpdateDto toArticleSellerUpdateDto(Article article){
+        return ArticleSellerUpdateDto.builder()
+                .id(article.getId())
+                .color(article.getColor() != null ? ColorDto.builder().id(article.getColor().getId()).name(article.getColor().getName()).build():null)
+                .price(article.getPrice())
+                .discount(article.getDiscount())
+                .inventories(article.getInventory().stream().filter(Inventory::getAvailable).map(inventory -> InventoryUpdateDto.builder().id(inventory.getId()).size(inventory.getSize()).build()).collect(Collectors.toList()))
+                .product(article.getProduct().getId())
+                .build();
+    }
 }
