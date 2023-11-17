@@ -1,12 +1,17 @@
 package shopapi.shopapi.dto.category;
 
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
+@Builder
 @Getter
 @Setter
-public class CategoryUpdateDto extends CategoryCreateDto{
+@NoArgsConstructor
+@AllArgsConstructor
+@Data
+public class CategoryUpdateDto{
     private Long id;
+    private Long parent;
+    private String name;
+    private String description;
 }

@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import shopapi.shopapi.dto.product.ProductCreateDto;
 import shopapi.shopapi.dto.product.ProductDto;
 import shopapi.shopapi.dto.product.ProductUpdateDto;
+import shopapi.shopapi.dto.product.SellerProductDto;
 import shopapi.shopapi.models.order.Item;
 import shopapi.shopapi.service.product.ProductService;
 
@@ -37,10 +38,10 @@ public class ProductController {
     public List<ProductDto> getProductsByUser(){
         return productService.getProductsByUser();
     }
-    @GetMapping("/{id}")
+    @GetMapping("/seller/{id}")
     @ResponseStatus(HttpStatus.OK)
     @CrossOrigin("*")
-    public ProductDto getProductById(@PathVariable("id")Long id){
+    public SellerProductDto getProductById(@PathVariable("id")Long id){
         return productService.getProduct(id);
     }
 

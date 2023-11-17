@@ -3,9 +3,12 @@ package shopapi.shopapi.service.product;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import shopapi.shopapi.dto.category.CategoryUpdateDto;
 import shopapi.shopapi.dto.product.ProductCreateDto;
 import shopapi.shopapi.dto.product.ProductDto;
 import shopapi.shopapi.dto.product.ProductUpdateDto;
+import shopapi.shopapi.dto.product.SellerProductDto;
+import shopapi.shopapi.models.product.Category;
 import shopapi.shopapi.models.product.Product;
 import shopapi.shopapi.models.user.User;
 import shopapi.shopapi.repository.product.ProductRepository;
@@ -47,9 +50,9 @@ public class ProductService {
             return null;
         return productRepository.findByUserId(user.getId()).stream().map(this::productToDto).collect(Collectors.toList());
     }
-    public ProductDto getProduct(Long id){
+    public SellerProductDto getProduct(Long id){
         Optional<Product> productOptional = productRepository.findById(id);
-        return productOptional.map(this::productToDto).orElse(null);
+        return productOptional.map(this::toSellerProductDto).orElse(null);
     }
 
     public ProductDto productToDto(Product product){
@@ -58,6 +61,20 @@ public class ProductService {
                 .name(product.getName())
                 .description(product.getDescription())
                 .category(product.getCategory().getId())
+                .build();
+    }
+    public SellerProductDto toSellerProductDto(Product product){
+        Category category = product.getCategory();
+        return SellerProductDto
+                .builder()
+                .id(product.getId())
+                .name(product.getName())
+                .description(product.getDescription())
+                .category(category != null ?CategoryUpdateDto.builder()
+                        .name(category.getName())
+                        .description(category.getDescription())
+                        .id(category.getId())
+                        .build() :null)
                 .build();
     }
     public Product productCreateDtoToProduct(ProductCreateDto productCreateDto){

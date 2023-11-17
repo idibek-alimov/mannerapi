@@ -58,9 +58,21 @@ public class CategoryService {
                 .description(categoryCreateDto.getDescription())
                 .build();
     }
+//    private Category updateDtoToCategory(CategoryUpdateDto categoryUpdateDto){
+//        Category parentCategory = this.getCategoryById(categoryUpdateDto.getParent());
+//        return Category.builder()
+//                .name(categoryUpdateDto.getName())
+//                .category(parentCategory)
+//                .description(categoryUpdateDto.getDescription())
+//                .build();
+//    }
     private Category updateDtoToCategory(CategoryUpdateDto categoryUpdateDto){
-        Category category = this.createDtoToCategory(categoryUpdateDto);
-       category.setId(categoryUpdateDto.getId());
-       return category;
+        Category parentCategory = this.getCategoryById(categoryUpdateDto.getParent());
+        return Category.builder()
+                .id(categoryUpdateDto.getId())
+                .name(categoryUpdateDto.getName())
+                .category(parentCategory)
+                .description(categoryUpdateDto.getDescription())
+                .build();
     }
 }
