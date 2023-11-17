@@ -25,6 +25,10 @@ public interface ArticleRepository extends JpaRepository<Article,Long> {
             "WHERE active=false OR active IS NULL " +
             "ORDER BY created_at DESC",nativeQuery = true)
     List<Article> getArticlesNotActive();
+    @Query(value = "SELECT * FROM article " +
+            "WHERE product_id=?1",nativeQuery = true)
+    List<Article> getArticlesByProductId(Long id);
+
 
     @Modifying
     @Query(value = "UPDATE article SET active=true WHERE id=?1",nativeQuery = true)

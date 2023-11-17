@@ -12,6 +12,7 @@ import java.util.List;
 @Data
 public class ArticleSellerDto {
     Long id;
+    Long productId;
     String mainPic;
     String category;
     List<String> inventories;

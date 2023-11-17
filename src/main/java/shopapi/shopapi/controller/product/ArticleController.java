@@ -70,6 +70,26 @@ public class ArticleController {
                                            @RequestPart("mainPic") MultipartFile mainFile){
         articleService.createArticleWithPictures(article,files,mainFile);
     }
+    @PostMapping(path="/seller/update/pictures/main",consumes = {MediaType.APPLICATION_JSON_VALUE,MediaType.MULTIPART_FORM_DATA_VALUE})
+    @ResponseStatus(HttpStatus.CREATED)
+    @CrossOrigin("*")
+    private void updateArticleWithPicturesMain(@RequestPart("article") ArticleUpdateDto article,
+                                           @RequestPart("newPictures") List<MultipartFile> files,
+                                           @RequestPart("oldPictures") List<String> oldPics,
+                                           @RequestPart("mainPic") MultipartFile mainFile){
+        //articleService.createArticleWithPictures(article,files,mainFile);
+        articleService.updateArticleWithPicturesMain(article,files,oldPics,mainFile);
+    }
+    @PostMapping(path="/seller/update/pictures",consumes = {MediaType.APPLICATION_JSON_VALUE,MediaType.MULTIPART_FORM_DATA_VALUE})
+    @ResponseStatus(HttpStatus.CREATED)
+    @CrossOrigin("*")
+    private void updateArticleWithPictures(@RequestPart("article") ArticleUpdateDto article,
+                                           @RequestPart("newPictures") List<MultipartFile> files,
+                                           @RequestPart("oldPictures") List<String> oldPics){
+        //articleService.createArticleWithPictures(article,files,mainFile);
+        articleService.updateArticleWithPictures(article,files,oldPics);
+    }
+
     @GetMapping("/ordered/shipping")
     @ResponseStatus(HttpStatus.OK)
     @CrossOrigin("*")
@@ -81,6 +101,12 @@ public class ArticleController {
     @CrossOrigin("*")
     public List<ArticleOrderedDto> getDeliveredArticles(){
         return articleService.getDeliveredArticlesByUser();
+    }
+    @GetMapping("/seller/product/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    @CrossOrigin("*")
+    public List<ArticleSellerDto> getArticlesByProduct(@PathVariable("id")Long id){
+        return articleService.getArticlesByProduct(id);
     }
 
     @GetMapping("/seller/available")
@@ -96,6 +122,7 @@ public class ArticleController {
     public List<ArticleSellerDto> getArticlesUnavailable(){
         return articleService.getSellersArticlesUnavailable();
     }
+
 
     @GetMapping("/manager/nonactive")
     @ResponseStatus(HttpStatus.OK)

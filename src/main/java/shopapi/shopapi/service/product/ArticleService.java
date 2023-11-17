@@ -86,6 +86,37 @@ public class ArticleService {
         pictureService.createMainPic(mainPic,article);
 
     }
+    public void updateArticle(Article article,ArticleUpdateDto articleUpdateDto){
+            //Article article = articleOptional.get();
+            article.setColor(colorService.getColorById(articleUpdateDto.getColor()));
+            article.setPrice(articleUpdateDto.getPrice());
+            article.setDiscount(articleUpdateDto.getDiscount());
+            inventoryService.updateInventories(articleUpdateDto.getInventories(),article);
+    }
+    public Article updateArticleWithPictures(ArticleUpdateDto articleUpdateDto,
+                                          List<MultipartFile> files,
+                                          List<String> oldPics){
+        Optional<Article> articleOptional = articleRepository.findById(articleUpdateDto.getId());
+        if(articleOptional.isPresent()){
+            Article article = articleOptional.get();
+            updateArticle(article,articleUpdateDto);
+            pictureService.updatePictures(oldPics,article);
+            pictureService.createPictures(files,article);
+            return article;
+        }
+        return null;
+    }
+
+    public void updateArticleWithPicturesMain(ArticleUpdateDto articleUpdateDto,
+                                              List<MultipartFile> files,
+                                              List<String> oldPics,
+                                              MultipartFile mainPic){
+
+        Article article = updateArticleWithPictures(articleUpdateDto,files,oldPics);
+        if(article !=null){
+            pictureService.updateMainPic(article,mainPic);
+        }
+    }
     public List<ArticleDto> getByCategory(Long id){
         return articleRepository.getByCategory(id).stream().map(this::articleToDto).collect(Collectors.toList());
     }
@@ -108,6 +139,10 @@ public class ArticleService {
     public List<ArticleSellerDto> getArticlesNonActive(){
         return articleRepository.getArticlesNotActive().stream().map(this::toSellerArticleDto).collect(Collectors.toList());
     }
+    public List<ArticleSellerDto> getArticlesByProduct(Long id){
+        return articleRepository.getArticlesByProductId(id).stream().map(this::toSellerArticleDto).collect(Collectors.toList());
+    }
+
 
     public void setActive(Long articleId){
         articleRepository.setActive(articleId);
@@ -132,6 +167,7 @@ public class ArticleService {
         return ArticleSellerDto
                 .builder()
                 .id(article.getId())
+                .productId(article.getProduct().getId())
                 .color(article.getColor().getName())
                 .mainPic(pictureService.getMainPic(article.getId()))
                 .name(article.getProduct().getName())
