@@ -242,6 +242,8 @@ public class ArticleService {
                 .price(article.getPrice())
                 .discount(article.getDiscount())
                 .inventories(article.getInventory().stream().filter(Inventory::getAvailable).map(inventory -> InventoryUpdateDto.builder().id(inventory.getId()).size(inventory.getSize()).build()).collect(Collectors.toList()))
+                .pictures(article.getPictures().stream().filter(item->!item.getMain()).map(Picture::getName).collect(Collectors.toList()))
+                .mainPic(pictureService.getMainPic(article.getId()))
                 .product(article.getProduct().getId())
                 .build();
     }

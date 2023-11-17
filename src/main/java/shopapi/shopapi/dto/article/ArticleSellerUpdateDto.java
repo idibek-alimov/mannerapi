@@ -18,5 +18,7 @@ public class ArticleSellerUpdateDto {
     private ColorDto color;
     private Double price;
     private List<InventoryUpdateDto> inventories;
+    private List<String> pictures;
+    private String mainPic;
     private Integer discount;
 }
