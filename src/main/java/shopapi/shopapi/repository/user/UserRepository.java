@@ -1,11 +1,11 @@
 package shopapi.shopapi.repository.user;
 
-import io.micrometer.observation.annotation.Observed;
+//import io.micrometer.observation.annotation.Observed;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import shopapi.shopapi.models.user.User;
 
-@Observed
+//@Observed
 public interface UserRepository extends JpaRepository<User,Long> {
     public User findByUsername(String username);
 

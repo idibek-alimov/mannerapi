@@ -1,6 +1,6 @@
 package shopapi.shopapi.repository.product;
 
-import io.micrometer.observation.annotation.Observed;
+//import io.micrometer.observation.annotation.Observed;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -9,7 +9,7 @@ import shopapi.shopapi.models.product.Inventory;
 
 import java.util.List;
 
-@Observed
+//@Observed
 public interface InventoryRepository extends JpaRepository<Inventory,Long> {
     @Query(value = "SELECT * FROM inventory WHERE article_id=?1 AND available IS TRUE",nativeQuery = true)
     List<Inventory> getByArticleId(Long id);

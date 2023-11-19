@@ -1,6 +1,6 @@
 package shopapi.shopapi.repository.order;
 
-import io.micrometer.observation.annotation.Observed;
+//import io.micrometer.observation.annotation.Observed;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -8,7 +8,7 @@ import shopapi.shopapi.models.order.Item;
 
 import java.util.List;
 
-@Observed
+//@Observed
 public interface ItemRepository extends JpaRepository<Item,Long> {
 
     @Query(value = "SELECT * FROM item WHERE status=?1",nativeQuery = true)

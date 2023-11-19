@@ -2,6 +2,9 @@ package shopapi.shopapi.service.product;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import shopapi.shopapi.dto.article.*;
@@ -35,14 +38,14 @@ public class ArticleService {
     private final PictureService pictureService;
     private final UserService userService;
     private final ItemService itemService;
+    @Value("${application.bucket.url}")
+    private String bucketURL;
+    @Value("${application.bucket.name}")
+    private String bucketName;
 
-
-    ///////////////CREATE////////////////////////////
-    public Article createArticle(ArticleCreateDto article){
-        Article newArticle = articleRepository.save(createDtoToArticle(article));
-        inventoryService.createInventories(article.getInventories(),newArticle);
-        return newArticle;
-    }
+    ///////////////////////////////////////////////////
+    ///////////////BASIC SHIT///////////////////////////
+    //////////////////////////////////////////////////////
 
     public List<ArticleOrderedDto> getManagerQueueArticles(){
         return itemService.getItemsByStatus(0).stream().map(this::inventoryToArticleOrderDto).collect(Collectors.toList());
@@ -69,11 +72,11 @@ public class ArticleService {
             return null;
         return articleRepository.findLikedByUser(user.getId()).stream().map(this::articleToDto).collect(Collectors.toList());
     }
-    public List<ArticleDto> getArticles(){
-        return articleRepository.findAll().stream().map(this::articleToDto).collect(Collectors.toList());
+    public List<ArticleDto> getArticles(Integer page,Integer amount){
+        return articleRepository.findAll(PageRequest.of(page,amount, Sort.by("created_at").descending())).stream().map(this::articleToDto).collect(Collectors.toList());
     }
-    public List<ArticleDto> searchByName(String text){
-        return articleRepository.searchArticles(text).stream().map(this::articleToDto).collect(Collectors.toList());
+    public List<ArticleDto> searchByName(String text,Integer page,Integer amount){
+        return articleRepository.searchArticles(text,PageRequest.of(page,amount, Sort.by("created_at").descending())).stream().map(this::articleToDto).collect(Collectors.toList());
     }
     public ArticleDetailDto getArticleById(Long id){
         Optional<Article> optionalArticle = articleRepository.findById(id);
@@ -81,6 +84,35 @@ public class ArticleService {
     }
     public Article getActualArticleById(Long id){
         return articleRepository.findById(id).orElse(null);
+    }
+    public List<ArticleDto> getByCategory(Long id,Integer page,Integer amount){
+        return articleRepository.getByCategory(id,PageRequest.of(page,amount, Sort.by("created_at").descending())).stream().map(this::articleToDto).collect(Collectors.toList());
+    }
+    public List<ArticleColorDto> getOtherColors(Long id){
+        return articleRepository.findOtherColors(id).stream().map(this::articleToArticleColorDto).collect(Collectors.toList());
+    }
+    public void changeArticleAvailable(Long id,Integer status){
+        User user = userService.getCurrentUser();
+        if(user== null){
+            return;
+        }
+        System.out.println("article id="+id+" and user id="+user.getId());
+        switch (status){
+            case 0:
+                articleRepository.setAvailable(id,user.getId());
+            case 1:
+                articleRepository.setUnavailable(id,user.getId());
+            default:
+                break;
+        }
+    }
+    ///////////////////////////////////////////////////////////////////
+    /////////////////////////////CREATE AND THING///////////////////////
+    ////////////////////////////////////////////////////////////////////
+    public Article createArticle(ArticleCreateDto article){
+        Article newArticle = articleRepository.save(createDtoToArticle(article));
+        inventoryService.createInventories(article.getInventories(),newArticle);
+        return newArticle;
     }
     public void createArticleWithPictures(ArticleCreateDto articleDto,List<MultipartFile> files,MultipartFile mainPic){
         Article article = createArticle(articleDto);
@@ -108,6 +140,18 @@ public class ArticleService {
         }
         return null;
     }
+    public Article updateArticleWithoutNewPictures(ArticleUpdateDto articleUpdateDto,
+                                             List<String> oldPics){
+        Optional<Article> articleOptional = articleRepository.findById(articleUpdateDto.getId());
+        if(articleOptional.isPresent()){
+            Article article = articleOptional.get();
+            updateArticle(article,articleUpdateDto);
+            pictureService.updatePictures(oldPics,article);
+            //pictureService.createPictures(files,article);
+            return article;
+        }
+        return null;
+    }
 
     public void updateArticleWithPicturesMain(ArticleUpdateDto articleUpdateDto,
                                               List<MultipartFile> files,
@@ -118,12 +162,6 @@ public class ArticleService {
         if(article !=null){
             pictureService.updateMainPic(article,mainPic);
         }
-    }
-    public List<ArticleDto> getByCategory(Long id){
-        return articleRepository.getByCategory(id).stream().map(this::articleToDto).collect(Collectors.toList());
-    }
-    public List<ArticleColorDto> getOtherColors(Long id){
-        return articleRepository.findOtherColors(id).stream().map(this::articleToArticleColorDto).collect(Collectors.toList());
     }
     public List<ArticleSellerDto> getSellersArticlesAvailable(){
         User user = this.userService.getCurrentUser();
@@ -169,7 +207,7 @@ public class ArticleService {
                 .id(article.getId())
                 .productId(article.getProduct().getId())
                 .color(article.getColor().getName())
-                .mainPic(pictureService.getMainPic(article.getId()))
+                .mainPic(bucketURL+"/"+bucketName+"/"+pictureService.getMainPic(article.getId()))
                 .name(article.getProduct().getName())
                 .price(article.getPrice())
                 .discount(article.getDiscount())
@@ -184,7 +222,7 @@ public class ArticleService {
                 .price(article.getDiscount() != null ? getDiscountPrice(article.getPrice(),article.getDiscount()): article.getPrice())
                 .prevPrice(article.getDiscount() != null ? article.getPrice() : null)
                 .discount(article.getDiscount())
-                .pic(pictureService.getMainPic(article.getId()))
+                .pic(bucketURL+"/"+bucketName+"/"+pictureService.getMainPic(article.getId()))
                 .build();
     }
     private ArticleDetailDto articleToDetailDto(Article article){
@@ -195,8 +233,8 @@ public class ArticleService {
                 .name(article.getProduct().getName())
                 .id(article.getId())
                 .description(article.getProduct().getDescription())
-                .mainPic(pictureService.getMainPic(article.getId()))
-                .pics(pictureService.getPics(article.getId()))
+                .mainPic(bucketURL+"/"+bucketName+"/"+pictureService.getMainPic(article.getId()))
+                .pics(pictureService.getPics(article.getId()).stream().map(item->bucketURL+"/"+bucketName+"/"+item).collect(Collectors.toList()))
                 .price(article.getDiscount() != null ? getDiscountPrice(article.getPrice(),article.getDiscount()): article.getPrice())
                 .discount(article.getDiscount())
                 .prevPrice(article.getDiscount() != null ? article.getPrice() : null)
@@ -208,7 +246,7 @@ public class ArticleService {
     private ArticleColorDto articleToArticleColorDto(Article article){
        return ArticleColorDto.builder()
                 .id(article.getId())
-                .mainPic(pictureService.getMainPic(article.getId()))
+                .mainPic(bucketURL+"/"+bucketName+"/"+pictureService.getMainPic(article.getId()))
                 .build();
     }
     private ArticleOrderedDto inventoryToArticleOrderDto(Item item){
@@ -222,7 +260,7 @@ public class ArticleService {
                 .prevPrice(article.getDiscount() != null ? article.getPrice() : null)
                 .name(article.getProduct().getName())
                 .price(article.getDiscount() != null ? getDiscountPrice(article.getPrice(),article.getDiscount()):article.getPrice())
-                .pic(pictureService.getMainPic(article.getId()))
+                .pic(bucketURL+"/"+bucketName+"/"+pictureService.getMainPic(article.getId()))
                 .discount(article.getDiscount())
                 .address(address.getAddressLine())
                 .latitude(address.getLatitude())
@@ -242,8 +280,8 @@ public class ArticleService {
                 .price(article.getPrice())
                 .discount(article.getDiscount())
                 .inventories(article.getInventory().stream().filter(Inventory::getAvailable).map(inventory -> InventoryUpdateDto.builder().id(inventory.getId()).size(inventory.getSize()).build()).collect(Collectors.toList()))
-                .pictures(article.getPictures().stream().filter(item->!item.getMain()).map(Picture::getName).collect(Collectors.toList()))
-                .mainPic(pictureService.getMainPic(article.getId()))
+                .pictures(article.getPictures().stream().filter(item->!item.getMain()).map(item->bucketURL+"/"+bucketName+"/"+item.getName()).collect(Collectors.toList()))
+                .mainPic(bucketURL+"/"+bucketName+"/"+pictureService.getMainPic(article.getId()))
                 .product(article.getProduct().getId())
                 .build();
     }
