@@ -37,7 +37,7 @@ public interface ArticleRepository extends JpaRepository<Article,Long> {
             "ORDER BY created_at DESC",nativeQuery = true)
     List<Article> getArticlesActive();
     @Query(value = "SELECT * FROM article " +
-            "WHERE active=true AND available=true" +
+            "WHERE active=true AND available=true " +
             "ORDER BY created_at DESC",nativeQuery = true)
     List<Article> getArticlesActiveAndAvailable();
 
