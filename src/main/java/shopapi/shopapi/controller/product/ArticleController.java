@@ -131,8 +131,15 @@ public class ArticleController {
     @GetMapping("/manager/activate/{id}")
     @ResponseStatus(HttpStatus.OK)
     @CrossOrigin("*")
-    public void getArticlesNonactive(@PathVariable("id")Long id){
+    public void activateArticle(@PathVariable("id")Long id){
         articleService.setActive(id);
+    }
+
+    @GetMapping("/manager/deactivate/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    @CrossOrigin("*")
+    public void deactivateArticle(@PathVariable("id")Long id){
+        articleService.deactivateArticle(id);
     }
     @GetMapping("/manager/order/queue")
     @ResponseStatus(HttpStatus.OK)

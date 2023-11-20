@@ -74,6 +74,11 @@ public interface ArticleRepository extends JpaRepository<Article,Long> {
     void setActive(Long articleId);
 
     @Modifying
+    @Query(value = "UPDATE article SET active=false WHERE id=?1",nativeQuery = true)
+    void deactivateArticle(Long articleId);
+
+
+    @Modifying
     @Query(value = "UPDATE article SET available=true WHERE id IN " +
             "(SELECT article.id FROM article JOIN product ON " +
             "article.product_id=product.id WHERE product.user_id=?2 " +

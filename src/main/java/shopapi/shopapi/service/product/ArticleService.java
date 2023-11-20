@@ -185,6 +185,9 @@ public class ArticleService {
     public void setActive(Long articleId){
         articleRepository.setActive(articleId);
     }
+    public void deactivateArticle(Long articleId){
+        articleRepository.deactivateArticle(articleId);
+    }
 
 
     //////////////////////////////////////////////////////
