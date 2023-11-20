@@ -179,6 +179,12 @@ public class ArticleService {
     public List<ArticleSellerDto> getArticlesNonActive(){
         return articleRepository.getArticlesNotActive().stream().map(this::toSellerArticleDto).collect(Collectors.toList());
     }
+    public List<ArticleSellerDto> getArticlesActive(){
+        return articleRepository.getArticlesActive().stream().map(this::toSellerArticleDto).collect(Collectors.toList());
+    }
+    public List<ArticleSellerDto> getArticlesActiveAndAvailable(){
+        return articleRepository.getArticlesActiveAndAvailable().stream().map(this::toSellerArticleDto).collect(Collectors.toList());
+    }
     public List<ArticleSellerUpdateDto> getArticlesByProduct(Long id){
         return articleRepository.getArticlesByProductId(id).stream().map(this::toArticleSellerUpdateDto).collect(Collectors.toList());
     }

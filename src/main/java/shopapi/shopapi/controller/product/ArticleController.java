@@ -128,6 +128,21 @@ public class ArticleController {
     public List<ArticleSellerDto> getArticlesNonactive(){
         return articleService.getArticlesNonActive();
     }
+
+    @GetMapping("/manager/active")
+    @ResponseStatus(HttpStatus.OK)
+    @CrossOrigin("*")
+    public List<ArticleSellerDto> getArticlesActive(){
+        return articleService.getArticlesActive();
+    }
+
+    @GetMapping("/manager/active/available")
+    @ResponseStatus(HttpStatus.OK)
+    @CrossOrigin("*")
+    public List<ArticleSellerDto> getArticlesActiveAndAvailable(){
+        return articleService.getArticlesActiveAndAvailable();
+    }
+
     @GetMapping("/manager/activate/{id}")
     @ResponseStatus(HttpStatus.OK)
     @CrossOrigin("*")
